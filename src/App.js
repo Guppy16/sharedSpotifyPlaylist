@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import queryString from 'query-string'
 
 let defaultTextColor = '#fff'
 let defaultStyle = {
@@ -97,7 +98,10 @@ class App extends Component {
 
   componentDidMount () {
     // Wrap in set timeout to simulate the loading
-    setTimeout ( () => {this.setState({serverData:fakeServerData});}, 1000);
+    let parsed = queryString.parse(window.location.search);
+    let accessToken = parsed.access_token;
+    console.log(accessToken)
+    // setTimeout ( () => {this.setState({serverData:fakeServerData});}, 1000);
     // setTimeout ( () => {this.setState({filterString:'fav2'});}, 1200); // To test filtering
   }
 
@@ -120,7 +124,8 @@ class App extends Component {
             ).map( playlist => 
             <Playlist playlist = {playlist}/>
             )}
-        </div> : <h1>Bufffering...</h1>
+        </div> : <button onClick={() => window.location = 'http://localhost:8888/login'}
+          style={{padding: '20px', 'font-size': '50px'}}>Sign in with Spotify</button>
         }
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
