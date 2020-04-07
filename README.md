@@ -5,6 +5,7 @@ This project is designed to scrape song names from a playlist, so that my friend
 The top 5 songs will be kept, and all other additions for a specific time interval will be removed.
 
 ### Notes for Development
+- To access website, use http://localhost:8888/login
 - After modifications, git commit your changes & git push heroku master
 - To add spotify credentials for authentication during development (using cmd):
   - SET SPOTIFY_CLIENT_ID=***
