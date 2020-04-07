@@ -23,7 +23,7 @@ let fakeServerData = {
         name: "Fav2",
         songs: [
           {name: 'Son1', duration: 120},
-          {name: 'Song 2', duration: 42}, 
+          {name: 'Song2', duration: 42}, 
           {name:'Song3', duration: 69},
         ]
       }
@@ -71,11 +71,14 @@ class Filter extends Component {
 
 class Playlist extends Component {
   render () {
+    let playlist = this.props.playlists;
     return (
       <div style={{...defaultStyle, width: "25%", display: 'inline-block', textAlign: 'left'}}>
         <img />
-        <h3 style={{textAlign: 'center'}}>Playlist Name</h3>
-        <ul><li>Song 1</li><li>Song 2</li><li>Song 3</li></ul>
+        <h3 style={{textAlign: 'center'}}>{playlist.name}</h3>
+        <ul>
+          {playlist.songs.map( song => <li>{song.name}</li>)}
+        </ul>
       </div>
     );
   }
@@ -103,8 +106,10 @@ class App extends Component {
           <PlaylistCounter playlists={this.state.serverData.user.playlists} />
           <HoursCounter playlists={this.state.serverData.user.playlists}/>
           <Filter />
-          <Playlist />
-          <Playlist />
+          {
+            this.state.serverData.user.playlists.map( (playlist) => 
+            <Playlist playlist = {playlist}/>
+            )}
         </div> : <h1>Bufffering...</h1>
         }
         <header className="App-header">
