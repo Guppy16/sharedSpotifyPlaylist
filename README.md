@@ -1,5 +1,12 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Goal
+This project is designed to scrape song names from a playlist, so that my friends can rate them.
+The top 5 songs will be kept, and all other additions for a specific time interval will be removed.
+
+### Notes for Development
+- After modifications, git commit your changes & git push heroku master
+
 ## Available Scripts
 
 In the project directory, you can run:
