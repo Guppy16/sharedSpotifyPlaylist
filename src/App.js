@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import queryString from 'query-string'
+import request from 'request'
 
 let defaultTextColor = '#fff'
 let defaultStyle = {
@@ -101,31 +102,69 @@ class App extends Component {
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
     console.log(accessToken)
+    
+    // Fetch data from API (using DevTips implementation) [does NOT work!]
+    // fetch (
+    //   'https://api.spotify.com/v1/me', 
+    //   {headers: {'Authorization': 'Bearer' + accessToken}}
+    // ).then(response =>
+    //     response.json()).then(data => console.log(data))
+
+    // Fetch data from API (using spotify implementation)
+    // Get user data
+    request.get(
+      {
+        url: 'https://api.spotify.com/v1/me',
+        headers: { 'Authorization': 'Bearer ' + accessToken },
+        json: true
+      }, 
+      (error, response, body) => {
+      console.log(body);
+      this.setState({user: {name: body.display_name}})
+    });
+
+    // Get playlist data
+    request.get({
+        url: 'https://api.spotify.com/v1/me/playlists',
+        headers: { 'Authorization': 'Bearer ' + accessToken },
+        json: true
+      }, 
+      (error, response, body) => {
+      console.log(body);
+      this.setState({playlists: body.items.map(item => ({
+        name:item.name,
+        songs: [],
+      }))})
+      }
+    );
+
     // setTimeout ( () => {this.setState({serverData:fakeServerData});}, 1000);
     // setTimeout ( () => {this.setState({filterString:'fav2'});}, 1200); // To test filtering
   }
 
   render() {
-    let playlistToRender = this.state.serverData.user ? this.state.serverData.user.playlists.filter( playlist =>
-      playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())
-    ) : []
+    let playlistToRender = 
+      this.state.user &&
+      this.state.playlists
+        ? this.state.playlists.filter( playlist =>
+          playlist.name.toLowerCase().includes(
+            this.state.filterString.toLowerCase())) 
+        : []
     return (
       <div className="App">
         <h1>Shared Spotify Playlist</h1>
-        {this.state.serverData.user ?
+        {this.state.user ?
         <div>
-          <h2> {this.state.serverData.user.name}' List</h2>
+          <h2> {this.state.user.name}' List</h2>
           <PlaylistCounter playlists={playlistToRender} />
           <HoursCounter playlists={playlistToRender}/>
           <Filter onTextChange={text => this.setState({filterString: text})}/>
           {
-            playlistToRender.filter( playlist =>
-              playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())
-            ).map( playlist => 
+            playlistToRender.map( playlist => 
             <Playlist playlist = {playlist}/>
             )}
         </div> : <button onClick={() => window.location = 'http://localhost:8888/login'}
-          style={{padding: '20px', 'font-size': '50px'}}>Sign in with Spotify</button>
+          style={{padding: '20px', 'fontSize': '50px'}}>Sign in with Spotify</button>
         }
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
