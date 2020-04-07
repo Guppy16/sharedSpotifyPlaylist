@@ -6,6 +6,9 @@ The top 5 songs will be kept, and all other additions for a specific time interv
 
 ### Notes for Development
 - After modifications, git commit your changes & git push heroku master
+- To add spotify credentials for authentication during development (using cmd):
+  - SET SPOTIFY_CLIENT_ID=***
+  - SET SPOTIFY_CLIENT_SECRET=***
 
 ## Available Scripts
 
