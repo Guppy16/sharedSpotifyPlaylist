@@ -7,11 +7,52 @@ let defaultStyle = {
   color: defaultTextColor,
 }
 
-class Aggregate extends Component {
+let fakeServerData = {
+  user: {
+    name: 'Akash',
+    playlists: [
+      { // Playlist 1 for the current songs added
+        name: "Fav1",
+        songs: [
+          {name: 'Son1', duration: 120},
+          {name: 'Song 2', duration: 69}, 
+          {name:'Song3', duration: 42},
+        ]
+      },
+      { // Playlist for the previous songs
+        name: "Fav2",
+        songs: [
+          {name: 'Son1', duration: 120},
+          {name: 'Song 2', duration: 42}, 
+          {name:'Song3', duration: 69},
+        ]
+      }
+    ]
+  }
+};
+
+class PlaylistCounter extends Component {
   render() {
     return (
       <div style={{...defaultStyle, width: "40%", display: 'inline-block'}}>
-        <h2 style={{color: '#fff'}}>Number Text</h2>
+        <h2 style={{color: '#fff'}}>No of playlists: {this.props.playlists.length}</h2>
+      </div>
+    );
+  }
+}
+
+class HoursCounter extends Component {
+  render() {
+    let allSongs = this.props.playlists.reduce( (songs, playlist) => {
+      return songs.concat(playlist.songs)
+    }, []);
+    let totalDuration = allSongs.reduce((sum, song) => {
+      return sum + song.duration;
+    }, 0)
+
+    return (
+      <div style={{...defaultStyle, width: "40%", display: 'inline-block'}}>
+        <h2 style={{color: '#fff'}}>{totalDuration} minutes</h2>
       </div>
     );
   }
@@ -40,31 +81,50 @@ class Playlist extends Component {
   }
 }
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Shared Spotify Playlist</h1>
-      <Aggregate />
-      <Aggregate />
-      <Filter />
-      <Playlist />
-      <Playlist />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo"/>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  constructor () {
+    super();
+    this.state = {serverData: {}};
+  }
+
+  componentDidMount () {
+    // Wrap in set timeout to simulate the loading
+    setTimeout ( () => {this.setState({serverData:fakeServerData});}, 2000);
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <h1>Shared Spotify Playlist</h1>
+        {this.state.serverData.user ?
+        <div>
+          <h2> {this.state.serverData.user.name}' List</h2>
+          <PlaylistCounter playlists={this.state.serverData.user.playlists} />
+          <HoursCounter playlists={this.state.serverData.user.playlists}/>
+          <Filter />
+          <Playlist />
+          <Playlist />
+        </div> : <h1>Bufffering...</h1>
+        }
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo"/>
+          <p>
+            Edit <code>src/App.js</code> and save to reload.
+          </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+          </a>
+        </header>
+      </div>
+    );
+  }
+  
 }
 
 export default App;
