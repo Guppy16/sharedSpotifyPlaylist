@@ -63,7 +63,7 @@ class Filter extends Component {
     return (
       <div style={{color: defaultTextColor}}>
         <img></img>
-        <input type="text"/>
+        <input type="text" onKeyUp={event => this.props.onTextChange(event.target.value)}/>
       </div>
     );
   }
@@ -71,13 +71,14 @@ class Filter extends Component {
 
 class Playlist extends Component {
   render () {
-    let playlist = this.props.playlists;
+    let playlist = this.props.playlist;
     return (
       <div style={{...defaultStyle, width: "25%", display: 'inline-block', textAlign: 'left'}}>
         <img />
         <h3 style={{textAlign: 'center'}}>{playlist.name}</h3>
         <ul>
-          {playlist.songs.map( song => <li>{song.name}</li>)}
+          {/* may hav to had a key to each item*/}
+          {playlist.songs.map( song => <li>{song.name}</li>)} 
         </ul>
       </div>
     );
@@ -88,12 +89,16 @@ class App extends Component {
 
   constructor () {
     super();
-    this.state = {serverData: {}};
+    this.state = {
+      serverData: {},
+      filterString: '',
+    };
   }
 
   componentDidMount () {
     // Wrap in set timeout to simulate the loading
-    setTimeout ( () => {this.setState({serverData:fakeServerData});}, 2000);
+    setTimeout ( () => {this.setState({serverData:fakeServerData});}, 1000);
+    // setTimeout ( () => {this.setState({filterString:'fav2'});}, 1200); // To test filtering
   }
 
   render() {
@@ -105,9 +110,11 @@ class App extends Component {
           <h2> {this.state.serverData.user.name}' List</h2>
           <PlaylistCounter playlists={this.state.serverData.user.playlists} />
           <HoursCounter playlists={this.state.serverData.user.playlists}/>
-          <Filter />
+          <Filter onTextChange={text => this.setState({filterString: text})}/>
           {
-            this.state.serverData.user.playlists.map( (playlist) => 
+            this.state.serverData.user.playlists.filter( playlist =>
+              playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())
+            ).map( playlist => 
             <Playlist playlist = {playlist}/>
             )}
         </div> : <h1>Bufffering...</h1>
