@@ -181,7 +181,8 @@ class App extends Component {
           <HoursCounter songs={songsToRender}/>
           <Filter onTextChange={text => this.handleFilter(text)}/>
           <Playlist playlist={this.state.playlist} />
-        </div> : <button onClick={() => window.location = 'http://localhost:8888/login'}
+        </div> : <button onClick={() => window.location = window.location.href.includes('localhost')
+          ? 'http://localhost:8888/login' : 'https://shared-playlist-backend.herokuapp.com/login' }
           style={{padding: '20px', 'fontSize': '50px'}}>Sign in with Spotify</button>
         }
         <header className="App-header">
