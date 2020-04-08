@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
+import 'reset-css/reset.css';
 import './App.css';
 import queryString from 'query-string'
 import request from 'request'
@@ -52,7 +53,7 @@ class HoursCounter extends Component {
 
     return (
       <div style={{...defaultStyle, width: "40%", display: 'inline-block'}}>
-        <h2 style={{color: '#fff'}}>Playlist Duration: {totalDuration} minutes</h2>
+        <h2 style={{color: '#fff'}}>Playlist Duration: {totalDuration} mins</h2>
       </div>
     );
   }
@@ -61,24 +62,65 @@ class HoursCounter extends Component {
 class Filter extends Component {
   render() {
     return (
-      <div style={{color: defaultTextColor}}>
-        <img></img>
-        <input type="text" onKeyUp={event => this.props.onTextChange(event.target.value)}/>
+      <div style= {{padding: '5px', height: '40px', verticalAlign: "bottom"}}>
+        <input type="text" onKeyUp={event => this.props.onTextChange(event.target.value)}
+        placeholder="Filter"
+        style= {{padding: '0px',}}
+        />
       </div>
+    );
+  }
+}
+
+class Song extends Component {
+  render () {
+    return (
+      <button className="song" onClick={this.props.onClick} style={{
+        fontSize: '15px',
+        padding: '3px',
+      }, 
+      this.props.renderVal ? {color: 'green'} : {backgroundColor: 'rgba(255,255,255,0.9)',}  
+      }>
+        {this.props.value}
+      </button>
     );
   }
 }
 
 class Playlist extends Component {
   render () {
+    let totalDuration = this.props.playlist.songs.reduce((sum, song) => {
+      return sum + song.duration;
+    }, 0);
+    totalDuration = Math.round(totalDuration/1000/60);
+    const numOfSongs = this.props.playlist.songs.length
     return (
-      <div style={{...defaultStyle, width: "75%", display: 'inline-block'}}>
-        <img src={this.props.playlist.imgUrl} style={{height:"100px", display: 'inline-block'}}/>
-        <h2 style={{textAlign: 'middle', display: 'inline-block'}}>{this.props.playlist.name}</h2>
+      <div>
+      <div style={{...defaultStyle, width: "auto"}}>
+        <img src={this.props.playlist.imgUrl} className='PlaylistImg'/>
+        <div style={{display: 'inline-block', verticalAlign: 'top', height: "140px"}}>
+          <p style={{
+            textAlign: 'center', fontSize: '30px', padding: '10px', fontWeight:'bold', 
+          }}>
+            {this.props.playlist.name}
+          </p>
+          <p style={{textAlign: 'left'}}>
+          {numOfSongs} songs <br/>
+          Duration: {totalDuration} mins
+          </p>
+        </div>
+      </div>
+      <Filter onTextChange={text => this.props.onTextChange(text)}/>
+      <div>
         <ul style={{textAlign: 'left'}}>
           {/* may hav to had a key to each item*/}
-          {this.props.playlist.songs.map( song => <li>{song.name}</li>)} 
+          {this.props.playlist.songs.map( song => 
+            <li key={song.name}>
+              <Song value={song.name} renderVal={song.render}/>
+            </li>
+          )} 
         </ul>
+      </div>
       </div>
     );
   }
@@ -173,14 +215,18 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1>Shared Spotify Playlist</h1>
+        <h1 style={{...defaultStyle, fontSize: '54px', padding: '20px'}}>
+          Shared Spotify Playlist
+        </h1>
         {this.state.user && this.state.playlist ?
         <div>
-          <h2> {this.state.user.name}' List</h2>
-          <SongCounter songs={songsToRender} />
-          <HoursCounter songs={songsToRender}/>
-          <Filter onTextChange={text => this.handleFilter(text)}/>
-          <Playlist playlist={this.state.playlist} />
+          <h2 style={{...defaultStyle, fontSize: '24px', paddingBottom: '20px'}}> 
+            {this.state.user.name}'s List
+          </h2>
+          {/* {<SongCounter songs={songsToRender} />
+          <HoursCounter songs={songsToRender}/>} */}
+          
+          <Playlist playlist={this.state.playlist} onTextChange={text => this.handleFilter(text)}/>
         </div> : <button onClick={() => window.location = window.location.href.includes('localhost')
           ? 'http://localhost:8888/login' : 'https://shared-playlist-backend.herokuapp.com/login' }
           style={{padding: '20px', 'fontSize': '50px'}}>Sign in with Spotify</button>
