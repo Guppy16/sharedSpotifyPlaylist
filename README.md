@@ -4,6 +4,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 This project is designed to scrape song names from a playlist, so that my friends can rate them.
 The top 5 songs will be kept, and all other additions for a specific time interval will be removed.
 
+## TODO
+- Add Drag Drop functionality
+- Save button -> form -> to store order of playlist [also checking is user has contributed]
+- backend processing of data:
+  - Top 10 songs
+  - Overall order of songs
+  - Overall points and order of people
+- Web page to view these results [May need to create a separate website and page for this]
+- Create refresh token
+
 ### Notes for Development
 - After modifications, git commit your changes & git push heroku master
 - To add spotify credentials for authentication during development (using cmd):
