@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
+// import {TextInput} from 'react-native';
 import logo from './logo.svg';
 import 'reset-css/reset.css';
 import './App.css';
 import queryString from 'query-string'
 import request from 'request'
+import { DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
 let defaultTextColor = '#fff'
 let defaultStyle = {
@@ -34,31 +36,6 @@ let fakeServerData = {
   }
 };
 
-class SongCounter extends Component {
-  render() {
-    return (
-      <div style={{...defaultStyle, width: "40%", display: 'inline-block'}}>
-        <h2 style={{color: '#fff'}}>{this.props.songs.length} Songs</h2>
-      </div>
-    );
-  }
-}
-
-class HoursCounter extends Component {
-  render() {
-    let totalDuration = this.props.songs.reduce((sum, song) => {
-      return sum + song.duration;
-    }, 0)
-    totalDuration = Math.round(totalDuration/1000/60)
-
-    return (
-      <div style={{...defaultStyle, width: "40%", display: 'inline-block'}}>
-        <h2 style={{color: '#fff'}}>Playlist Duration: {totalDuration} mins</h2>
-      </div>
-    );
-  }
-}
-
 class Filter extends Component {
   render() {
     return (
@@ -67,9 +44,33 @@ class Filter extends Component {
         placeholder="Filter"
         style= {{padding: '0px',}}
         />
-      </div>
+      </div>  
     );
   }
+}
+
+function PlaylistHeader (props) {
+  let totalDuration = props.playlist.songs.reduce((sum, song) => {
+    return sum + song.duration;
+  }, 0);
+  totalDuration = Math.round(totalDuration/1000/60);
+  const numOfSongs = props.playlist.songs.length
+  return (
+    <div style={{...defaultStyle, width: "auto", marginLeft: '0vw'}}>
+      <img src={props.playlist.imgUrl} className='PlaylistImg'/>
+      <div style={{display: 'inline-block', verticalAlign: 'top', height: "140px"}}>
+        <p style={{
+          textAlign: 'center', fontSize: '30px', padding: '10px', fontWeight:'bold', 
+        }}>
+          {props.playlist.name}
+        </p>
+        <p style={{textAlign: 'left'}}>
+        {numOfSongs} songs <br/>
+        Duration: {totalDuration} mins
+        </p>
+      </div>
+    </div>
+    );
 }
 
 class Song extends Component {
@@ -87,40 +88,91 @@ class Song extends Component {
   }
 }
 
-class Playlist extends Component {
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+const grid = 8; // Used for padding
+
+const getItemStyle = (isDragging, draggableStyle, inFilter) => ({
+  // some basic styles to make the items look a bit nicer
+  userSelect: "none",
+  margin: `0 0 ${grid}px 0`,
+
+  // change padding based on filter
+  padding: inFilter ? grid * 2 : grid,
+
+  // change background colour if dragging
+  background: isDragging ? "lightgreen" : inFilter? "green" : "darkseagreen",
+
+  // styles we need to apply on draggables
+  ...draggableStyle
+});
+
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "#202020" : "black",
+  padding: grid,
+  width: 250
+});
+
+class SongList extends Component {
   render () {
-    let totalDuration = this.props.playlist.songs.reduce((sum, song) => {
-      return sum + song.duration;
-    }, 0);
-    totalDuration = Math.round(totalDuration/1000/60);
-    const numOfSongs = this.props.playlist.songs.length
     return (
-      <div>
-      <div style={{...defaultStyle, width: "auto"}}>
-        <img src={this.props.playlist.imgUrl} className='PlaylistImg'/>
-        <div style={{display: 'inline-block', verticalAlign: 'top', height: "140px"}}>
-          <p style={{
-            textAlign: 'center', fontSize: '30px', padding: '10px', fontWeight:'bold', 
-          }}>
-            {this.props.playlist.name}
-          </p>
-          <p style={{textAlign: 'left'}}>
-          {numOfSongs} songs <br/>
-          Duration: {totalDuration} mins
-          </p>
-        </div>
-      </div>
+      <DragDropContext onDragEnd={this.props.onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided, snapshot) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver)}
+              >
+                {this.props.songs.map((song, index) => (
+                  <Draggable key={song.id} draggableId={song.id} index={index}>
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style,
+                          song.render,
+                        )}
+                      >
+                        {song.name}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+    );
+  }
+}
+
+class Playlist extends Component {
+
+  render () {
+
+    const items = this.props.playlist.songs.map( song => ({
+      id: song.id,
+      content: song.name,
+    }));
+
+    return (
+      <div style={{...defaultStyle, marginLeft: '10vw'}}>
+      <PlaylistHeader playlist={this.props.playlist} />
       <Filter onTextChange={text => this.props.onTextChange(text)}/>
-      <div>
-        <ul style={{textAlign: 'left'}}>
-          {/* may hav to had a key to each item*/}
-          {this.props.playlist.songs.map( song => 
-            <li key={song.name}>
-              <Song value={song.name} renderVal={song.render}/>
-            </li>
-          )} 
-        </ul>
-      </div>
+
+      <SongList onDragEnd={this.props.onDragEnd} songs={this.props.playlist.songs} />
       </div>
     );
   }
@@ -133,6 +185,7 @@ class App extends Component {
     this.state = {
       filterString: '',
     };
+    this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   componentDidMount () {
@@ -175,6 +228,7 @@ class App extends Component {
           name: body.name,
           imgUrl: body.images[0].url, 
           songs: body.tracks.items.map(item => ({
+            id: item.track.id,
             name: item.track.name,
             duration: item.track.duration_ms,
             render: true,
@@ -209,42 +263,66 @@ class App extends Component {
 
   }
 
+  onDragEnd(result) {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(
+      this.state.playlist.songs,
+      result.source.index,
+      result.destination.index
+    );
+
+    let playlist = {...this.state.playlist};
+    playlist.songs = items;
+    this.setState({playlist});
+  }
+
   render() {      
 
     let songsToRender = this.state.playlist ? this.state.playlist.songs.filter( song => song.render) : [];
 
     return (
       <div className="App">
-        <h1 style={{...defaultStyle, fontSize: '54px', padding: '20px'}}>
+        <h1 style={{...defaultStyle, fontSize: '54px', padding: '20px', textAlign:'center'}}>
           Shared Spotify Playlist
         </h1>
         {this.state.user && this.state.playlist ?
         <div>
-          <h2 style={{...defaultStyle, fontSize: '24px', paddingBottom: '20px'}}> 
+          <h2 style={{...defaultStyle, fontSize: '24px', paddingBottom: '20px', marginLeft: '10vw'}}> 
             {this.state.user.name}'s List
           </h2>
-          {/* {<SongCounter songs={songsToRender} />
-          <HoursCounter songs={songsToRender}/>} */}
-          
-          <Playlist playlist={this.state.playlist} onTextChange={text => this.handleFilter(text)}/>
-        </div> : <button onClick={() => window.location = window.location.href.includes('localhost')
-          ? 'http://localhost:8888/login' : 'https://shared-playlist-backend.herokuapp.com/login' }
-          style={{padding: '20px', 'fontSize': '50px'}}>Sign in with Spotify</button>
+          <Playlist 
+            playlist={this.state.playlist} onTextChange={text => this.handleFilter(text)} 
+            onDragEnd={this.onDragEnd}
+          />
+        </div> 
+          : <div style={{textAlign:'center', padding: '20px'}}><button onClick={() => {
+              return window.location = window.location.href.includes('localhost')
+                ? 'http://localhost:8888/login' 
+                : 'https://shared-playlist-backend.herokuapp.com/login' }
+                }
+              onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
+              onMouseLeave={ (e) => e.target.style.border='3px solid #fff' }
+              style={{
+                padding: '20px',fontSize: '50px', borderRadius: '5px', border: '3px solid #fff', 
+            }}>
+              Sign in with Spotify
+            </button></div>
         }
-        <header className="App-header">
+        <footer className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
           <a
             className="App-link"
             href="https://reactjs.org"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Learn React
+            Powered by React
           </a>
-        </header>
+        </footer>
       </div>
     );
   }

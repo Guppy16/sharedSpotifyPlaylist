@@ -1,12 +1,10 @@
 .App {
-  background-color: #25253f;
-  text-align: center;
-  color: chocolate;
+  font-family: Arial, Helvetica, sans-serif ;
 }
 
 .App-logo {
-  height: 10vmin;
   pointer-events: none;
+  height: 50px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -17,7 +15,7 @@
 
 .App-header {
   background-color: #282c349f;
-  min-height: 50vh;
+  min-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,6 +26,8 @@
 
 .App-link {
   color: #61dafb;
+  padding: 10px;
+  font-size: 20px;
 }
 
 @keyframes App-logo-spin {
