@@ -117,7 +117,7 @@ const getItemStyle = (isDragging, draggableStyle, inFilter) => ({
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? "#202020" : "black",
   padding: grid,
-  width: 250
+  width: '75vw'
 });
 
 class SongList extends Component {
@@ -171,7 +171,6 @@ class Playlist extends Component {
       <div style={{...defaultStyle, marginLeft: '10vw'}}>
       <PlaylistHeader playlist={this.props.playlist} />
       <Filter onTextChange={text => this.props.onTextChange(text)}/>
-
       <SongList onDragEnd={this.props.onDragEnd} songs={this.props.playlist.songs} />
       </div>
     );
@@ -190,21 +189,12 @@ class App extends Component {
 
   componentDidMount () {
     
-    // Refresh token? Somehwere else
-    let parsed = queryString.parse(window.location.search);
-    let accessToken = parsed.access_token;
+    // Refresh token? May need to set this automatically
+    const parsed = queryString.parse(window.location.search);
+    const accessToken = parsed.access_token;
     console.log(accessToken);
     if (!accessToken){return;}
-    
-    // Fetch data from API (using DevTips implementation) [does NOT work!]
-    // fetch (
-    //   'https://api.spotify.com/v1/me', 
-    //   {headers: {'Authorization': 'Bearer' + accessToken}}
-    // ).then(response =>
-    //     response.json()).then(data => console.log(data))
 
-    // Fetch data from API (using spotify implementation)
-    // Get user data
     request.get(
       {
         url: 'https://api.spotify.com/v1/me',
@@ -218,24 +208,26 @@ class App extends Component {
 
     // Get collabroative playlist data
     request.get({
-        url: 'https://api.spotify.com/v1/playlists/7JJzP95ARTN2A08g7xahXD',
-        headers: { 'Authorization': 'Bearer ' + accessToken },
-        json: true
-      }, 
-      (error, response, body) => {
-        console.log(body);
-        this.setState({playlist: {
-          name: body.name,
-          imgUrl: body.images[0].url, 
-          songs: body.tracks.items.map(item => ({
-            id: item.track.id,
-            name: item.track.name,
-            duration: item.track.duration_ms,
-            render: true,
-          })),
-        }})
-        console.log(this.state);
-        }
+      url: (window.location.href.includes('localhost')
+        ? 'http://localhost:8888/' 
+        : 'https://shared-playlist-backend.herokuapp.com/')
+      + 'api/playlist?access_token=' + accessToken,
+      json: true
+    },
+    (error, response, body) => {
+      console.log(body);
+      this.setState({playlist: {
+        name: body.name,
+        imgUrl: body.images[0].url, 
+        songs: body.tracks.items.map(item => ({
+          id: item.track.id,
+          name: item.track.name,
+          duration: item.track.duration_ms,
+          render: true,
+        })),
+      }})
+      console.log(this.state);
+      }
     );
 
     // setTimeout ( () => {this.setState({serverData:fakeServerData});}, 1000);
