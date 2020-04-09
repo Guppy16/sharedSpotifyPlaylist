@@ -169,8 +169,25 @@ class Playlist extends Component {
 
     return (
       <div style={{...defaultStyle, marginLeft: '10vw'}}>
-      <PlaylistHeader playlist={this.props.playlist} />
-      <Filter onTextChange={text => this.props.onTextChange(text)}/>
+      <div style={{display:'flex', alignItems:'center'}}>
+        <div style={{display: 'inline-block'}}>
+          <PlaylistHeader playlist={this.props.playlist} />
+          <Filter onTextChange={text => this.props.onTextChange(text)}/>
+        </div>
+        <div style={{display: 'inline-block', marginLeft:'10vw', textAlign: 'center'}}>
+        <button onClick={() => this.props.handleClick()} 
+          onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
+          onMouseLeave={ (e) => e.target.style.border='3px solid #fff' } 
+          style={{ width:'20vw', padding:'20px', borderRadius: '5px', border: '3px solid #fff', 
+          fontSize: '25px', fontWeight: 'bold'
+        }}>
+          Save
+        </button>
+        <p style={{
+          padding: '11px', fontStyle: 'italic',
+        }}>You can change your response later</p>
+        </div>
+      </div>
       <SongList onDragEnd={this.props.onDragEnd} songs={this.props.playlist.songs} />
       </div>
     );
@@ -195,6 +212,7 @@ class App extends Component {
     console.log(accessToken);
     if (!accessToken){return;}
 
+    // Get user data
     request.get(
       {
         url: 'https://api.spotify.com/v1/me',
@@ -255,6 +273,27 @@ class App extends Component {
 
   }
 
+  // Handle Submit button
+  handleClick () {
+    // POST request to send order of songs
+    request.post({
+      url: (
+        window.location.href.includes('localhost')
+          ? 'http://localhost:8888/' 
+          : 'https://shared-playlist-backend.herokuapp.com/'
+          ) + 'api/playlist',
+        form: {
+          id: this.state.user.name,
+          songs: this.state.playlist.songs,
+        },
+        json: true,
+    },
+    (error, response, body) => {
+      console.log(body);
+    }
+    );
+  }
+
   onDragEnd(result) {
     // dropped outside the list
     if (!result.destination) {
@@ -288,7 +327,7 @@ class App extends Component {
           </h2>
           <Playlist 
             playlist={this.state.playlist} onTextChange={text => this.handleFilter(text)} 
-            onDragEnd={this.onDragEnd}
+            onDragEnd={this.onDragEnd} handleClick={() => this.handleClick()}
           />
         </div> 
           : <div style={{textAlign:'center', padding: '20px'}}><button onClick={() => {
@@ -299,7 +338,7 @@ class App extends Component {
               onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
               onMouseLeave={ (e) => e.target.style.border='3px solid #fff' }
               style={{
-                padding: '20px',fontSize: '50px', borderRadius: '5px', border: '3px solid #fff', 
+                padding: '20px', fontSize: '50px', borderRadius: '5px', border: '3px solid #fff', 
             }}>
               Sign in with Spotify
             </button></div>
