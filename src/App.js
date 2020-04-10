@@ -6,6 +6,7 @@ import './App.css';
 import queryString from 'query-string'
 import request from 'request'
 import { DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+//const superagent = require('superagent');
 
 let defaultTextColor = '#fff'
 let defaultStyle = {
@@ -169,7 +170,7 @@ class Playlist extends Component {
 
     return (
       <div style={{...defaultStyle, marginLeft: '10vw'}}>
-      <div style={{display:'flex', alignItems:'center'}}>
+      <div style={{display:'flex', alignItems:'center', justifyContent: 'space-between'}}>
         <div style={{display: 'inline-block'}}>
           <PlaylistHeader playlist={this.props.playlist} />
           <Filter onTextChange={text => this.props.onTextChange(text)}/>
@@ -227,9 +228,9 @@ class App extends Component {
     // Get collabroative playlist data
     request.get({
       url: (window.location.href.includes('localhost')
-        ? 'http://localhost:8888/' 
-        : 'https://shared-playlist-backend.herokuapp.com/')
-      + 'api/playlist?access_token=' + accessToken,
+        ? 'http://localhost:8888' 
+        : 'https://shared-playlist-backend.herokuapp.com')
+      + '/api/playlist?access_token=' + accessToken,
       json: true
     },
     (error, response, body) => {
@@ -279,9 +280,9 @@ class App extends Component {
     request.post({
       url: (
         window.location.href.includes('localhost')
-          ? 'http://localhost:8888/' 
-          : 'https://shared-playlist-backend.herokuapp.com/'
-          ) + 'api/playlist',
+          ? 'http://localhost:8888' 
+          : 'https://shared-playlist-backend.herokuapp.com'
+          ) + '/api/playlist',
         form: {
           id: this.state.user.name,
           songs: this.state.playlist.songs,
