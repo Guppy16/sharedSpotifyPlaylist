@@ -341,17 +341,7 @@ class App extends Component {
               Sign in with Spotify
             </button></div>
         }
-        <footer className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Powered by React
-          </a>
-        </footer>
+        
       </div>
     );
   }
