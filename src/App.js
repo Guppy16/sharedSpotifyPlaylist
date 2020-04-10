@@ -67,7 +67,7 @@ function PlaylistHeader (props) {
         </p>
         <p style={{textAlign: 'left'}}>
         {numOfSongs} songs <br/>
-        Duration: {totalDuration} mins
+        {totalDuration} mins
         </p>
       </div>
     </div>
@@ -145,7 +145,7 @@ class SongList extends Component {
                           song.render,
                         )}
                       >
-                        {song.name}
+                        {index + 1}. {song.name}
                       </div>
                     )}
                   </Draggable>
@@ -169,13 +169,13 @@ class Playlist extends Component {
     }));
 
     return (
-      <div style={{...defaultStyle, marginLeft: '10vw'}}>
+      <div style={{...defaultStyle, marginLeft: '10vw', marginRight: '10vw'}}>
       <div style={{display:'flex', alignItems:'center', justifyContent: 'space-between'}}>
         <div style={{display: 'inline-block'}}>
           <PlaylistHeader playlist={this.props.playlist} />
           <Filter onTextChange={text => this.props.onTextChange(text)}/>
         </div>
-        <div style={{display: 'inline-block', marginLeft:'10vw', textAlign: 'center'}}>
+        <div style={{display: 'inline-block', textAlign: 'center'}}>
         <button onClick={() => this.props.handleClick()} 
           onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
           onMouseLeave={ (e) => e.target.style.border='3px solid #fff' } 
@@ -185,7 +185,7 @@ class Playlist extends Component {
           Save
         </button>
         <p style={{
-          padding: '11px', fontStyle: 'italic',
+          padding: '9px', fontStyle: 'italic',
         }}>You can change your response later</p>
         </div>
       </div>
@@ -318,9 +318,6 @@ class App extends Component {
 
     return (
       <div className="App">
-        <h1 style={{...defaultStyle, fontSize: '54px', padding: '20px', textAlign:'center'}}>
-          Shared Spotify Playlist
-        </h1>
         {this.state.user && this.state.playlist ?
         <div>
           <h2 style={{...defaultStyle, fontSize: '24px', paddingBottom: '20px', marginLeft: '10vw'}}> 

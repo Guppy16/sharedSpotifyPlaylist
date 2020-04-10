@@ -48,7 +48,7 @@ class Home extends React.Component {
     return (
       <header style={{...defaultStyle, verticalAlign: 'middle', display: 'flex', justifyContent: 'space-between'}}>
         <h1 style={{display: 'inline-block', padding: '20px', fontSize: '30px'}}>
-          Insert Logo
+          Shared Spotify Playlist
         </h1>
         <p>I'm storing cookies whether you like it or not</p>
 
