@@ -106,10 +106,11 @@ class Results extends Component {
     //   );
     }
 
-    // Handle Restart Playlist (Type in Playlist name to proceed)
+    // Handle Restart Playlist 
     handleClick () {
-    
-        
+        // Type in Playlist name to proceed
+
+
       // POST request to send order of songs
       request.post({
         url: (
@@ -150,7 +151,7 @@ class Results extends Component {
                 }}>
             <ResultsButton
                 onClick = {() => this.handleClick()}
-                value='Reset Songs'
+                value='Update Songs'
             />
              
             {this.state.user?
