@@ -46,7 +46,7 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      display: 'Results', // APP/RESULTS
+      display: 'App', // App/Results
     };
   }
 
