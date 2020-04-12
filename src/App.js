@@ -216,12 +216,13 @@ class App extends Component {
     const userid = parsed.user_id; // only returned in deployment
     const username = parsed.username;
     console.log(userid);
-    console.log('&user_id=' + this.state.user.id);
     console.log(username);
 
     // Get user data
-    if (username){
+    if (userid){
       this.setState({user: {name: username, id: userid}});
+      console.log(this.state);
+      console.log('&user_id=' + this.state.user.id);
     }else{
       request.get(
       {
@@ -241,20 +242,22 @@ class App extends Component {
       url: (window.location.href.includes('localhost')
         ? 'http://localhost:8888'
         : 'https://shared-playlist-backend.herokuapp.com')
-        + '/api/playlist?access_token=' + accessToken + '&user_id=' + this.state.user.id,
+        + '/api/playlist?access_token=' + accessToken + (userid ? '&user_id=' + this.state.user.id : ''),
       json: true
     }, (error, response, body) => {
+      console.log("Got playlist data from api");
       console.log(body);
       this.setState({
       playlist: {
-        name: body.playlist.name,
-        imgUrl: body.playlist.imgUrl,
-        songs: body.playlist.songs.map(item => ({
+        name: body.name,
+        imgUrl: body.imgUrl,
+        songs: body.songs.map(item => ({
           id: item.id,
           name: item.name,
           duration: item.duration,
+          score: item.score,
           render: true,
-        })),
+        })).sort( (a,b) => a.score - b.score),
       }
       });
       console.log(this.state);
@@ -295,7 +298,7 @@ class App extends Component {
           : 'https://shared-playlist-backend.herokuapp.com'
           ) + '/api/playlist',
         form: {
-          id: this.state.user.name,
+          id: this.state.user.id,
           songs: this.state.playlist.songs,
         },
         json: true,
