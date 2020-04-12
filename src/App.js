@@ -306,7 +306,7 @@ class App extends Component {
     },
     (error, response, body) => {
       console.log(body);
-      this.state.songsSaved = body === "OK" ? true : false;      
+      this.setState({songsSaved: (body === "OK" ) ? true : false})   
     }
     );
   }
@@ -333,11 +333,10 @@ class App extends Component {
     if (items !== this.state.playlist.songs)
     {
       this.setState({songsSaved: false});
-    }
-
-    let playlist = {...this.state.playlist};
-    playlist.songs = items;
-    this.setState({playlist});
+      let playlist = {...this.state.playlist};
+      playlist.songs = items;
+      this.setState({playlist});
+    }    
   }
 
   render() {      
