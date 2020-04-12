@@ -179,10 +179,10 @@ class Playlist extends Component {
         <button onClick={() => this.props.handleClick()} 
           onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
           onMouseLeave={ (e) => e.target.style.border='3px solid #fff' } 
-          style={{ width:'20vw', padding:'20px', borderRadius: '5px', border: '3px solid #fff', 
-          fontSize: '25px', fontWeight: 'bold'
+          style={{ width:'20vw', padding:'3px', borderRadius: '3px', border: '3px solid #fff', 
+          fontSize: '22px', fontWeight: 'bold'
         }}>
-          Save
+          { this.props.buttonVal ? "Saved" : "Save"}
         </button>
         <p style={{
           padding: '9px', fontStyle: 'italic',
@@ -201,6 +201,7 @@ class App extends Component {
     super();
     this.state = {
       filterString: '',
+      songsSaved: false,
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
@@ -305,6 +306,7 @@ class App extends Component {
     },
     (error, response, body) => {
       console.log(body);
+      this.state.songsSaved = body === "OK" ? true : false;      
     }
     );
   }
@@ -328,6 +330,11 @@ class App extends Component {
     //   item.score = index;
     // })
 
+    if (items !== this.state.playlist.songs)
+    {
+      this.setState({songsSaved: false});
+    }
+
     let playlist = {...this.state.playlist};
     playlist.songs = items;
     this.setState({playlist});
@@ -345,8 +352,10 @@ class App extends Component {
             {this.state.user.name}'s List
           </h2>
           <Playlist 
-            playlist={this.state.playlist} onTextChange={text => this.handleFilter(text)} 
-            onDragEnd={this.onDragEnd} handleClick={() => this.handleClick()}
+            playlist={this.state.playlist} 
+            onTextChange={text => this.handleFilter(text)} 
+            onDragEnd={this.onDragEnd} 
+            handleClick={() => this.handleClick()} buttonVal ={this.state.songsSaved}
           />
         </div> 
           : <div style={{textAlign:'center', padding: '20px'}}><button onClick={() => {
