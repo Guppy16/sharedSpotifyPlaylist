@@ -213,8 +213,17 @@ class App extends Component {
     console.log(accessToken);
     if (!accessToken){return;}
 
+    const userid = parsed.user_id; // only returned in deployment
+    const username = parsed.username;
+    console.log(userid);
+    console.log('&user_id=' + this.state.user.id);
+    console.log(username);
+
     // Get user data
-    request.get(
+    if (username){
+      this.setState({user: {name: username, id: userid}});
+    }else{
+      request.get(
       {
         url: 'https://api.spotify.com/v1/me',
         headers: { 'Authorization': 'Bearer ' + accessToken },
@@ -224,34 +233,32 @@ class App extends Component {
       console.log(body);
       this.setState({user: {name: body.display_name, id: body.id}});
       console.log(this.state);
-
-      // Get collabroative playlist data
-      request.get({
-        url: (window.location.href.includes('localhost')
-          ? 'http://localhost:8888'
-          : 'https://shared-playlist-backend.herokuapp.com')
-          + '/api/playlist?access_token=' + accessToken + '&user_id=' + this.state.user.id,
-        json: true
-      }, (error, response, body) => {
-        console.log(body);
-        this.setState({
-        playlist: {
-          name: body.name,
-          imgUrl: body.images[0].url,
-          songs: body.tracks.items.map(item => ({
-            id: item.track.id,
-            name: item.track.name,
-            duration: item.track.duration_ms,
-            render: true,
-          })),
-        }
-        });
-        console.log(this.state);
       });
+    }
 
+    // Get collabroative playlist data
+    request.get({
+      url: (window.location.href.includes('localhost')
+        ? 'http://localhost:8888'
+        : 'https://shared-playlist-backend.herokuapp.com')
+        + '/api/playlist?access_token=' + accessToken + '&user_id=' + this.state.user.id,
+      json: true
+    }, (error, response, body) => {
+      console.log(body);
+      this.setState({
+      playlist: {
+        name: body.playlist.name,
+        imgUrl: body.playlist.imgUrl,
+        songs: body.playlist.songs.map(item => ({
+          id: item.id,
+          name: item.name,
+          duration: item.duration,
+          render: true,
+        })),
+      }
+      });
+      console.log(this.state);
     });
-
-    
 
     // setTimeout ( () => {this.setState({serverData:fakeServerData});}, 1000);
     // setTimeout ( () => {this.setState({filterString:'fav2'});}, 1200); // To test filtering
