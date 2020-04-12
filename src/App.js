@@ -222,7 +222,7 @@ class App extends Component {
     if (userid){
       this.setState({user: {name: username, id: userid}});
       console.log(this.state);
-      console.log('&user_id=' + this.state.user.id);
+      //console.log(this.state.user.id); // setstate is asynchronous, so causes debug issues
     }else{
       request.get(
       {
@@ -242,7 +242,7 @@ class App extends Component {
       url: (window.location.href.includes('localhost')
         ? 'http://localhost:8888'
         : 'https://shared-playlist-backend.herokuapp.com')
-        + '/api/playlist?access_token=' + accessToken + (userid ? '&user_id=' + this.state.user.id : ''),
+        + '/api/playlist?access_token=' + accessToken + '&user_id=' (userid ? userid : ''),
       json: true
     }, (error, response, body) => {
       console.log("Got playlist data from api");
@@ -315,11 +315,18 @@ class App extends Component {
       return;
     }
 
-    const items = reorder(
+    let items = reorder(
       this.state.playlist.songs,
       result.source.index,
       result.destination.index
     );
+
+    // Update score (done on SERVER side FOR NOW)
+    // const maxScore = items.length;
+
+    // items.forEach( (item, index) => {
+    //   item.score = index;
+    // })
 
     let playlist = {...this.state.playlist};
     playlist.songs = items;
