@@ -242,7 +242,7 @@ class App extends Component {
       url: (window.location.href.includes('localhost')
         ? 'http://localhost:8888'
         : 'https://shared-playlist-backend.herokuapp.com')
-        + '/api/playlist?access_token=' + accessToken + '&user_id=' (userid ? userid : ''),
+        + '/api/playlist?access_token=' + accessToken + '&user_id=' + (userid ? userid : ''),
       json: true
     }, (error, response, body) => {
       console.log("Got playlist data from api");
