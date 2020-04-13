@@ -30,7 +30,7 @@ export default function SimpleTable(props) {
             {
                 headers.map( (value, index) => {
                     if (index !== 0){
-                        return <TableCell align="right">{value} &nbsp;</TableCell>
+                        return <TableCell align="left">{value} &nbsp;</TableCell>
                     }
                 })
             }
@@ -45,7 +45,7 @@ export default function SimpleTable(props) {
               {
                   row.values.map( (value, index) => {
                       if (index !== 0){
-                        return <TableCell align="right">{value}</TableCell>
+                        return <TableCell align="left">{value}</TableCell>
                       }
                   })
               }

@@ -129,15 +129,15 @@ class SongList extends Component {
             {(provided, snapshot) => (
               <div
                 {...provided.droppableProps}
-                ref={provided.innerRef}
                 style={getListStyle(snapshot.isDraggingOver)}
               >
                 {this.props.songs.map((song, index) => (
                   <Draggable key={song.id} draggableId={song.id} index={index}>
                     {(provided, snapshot) => (
                       <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      ref={provided.innerRef}
                         {...provided.dragHandleProps}
                         style={getItemStyle(
                           snapshot.isDragging,
