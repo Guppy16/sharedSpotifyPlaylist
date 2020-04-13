@@ -61,7 +61,7 @@ class Results extends Component {
     constructor (props) {
       super(props);
       this.state = {
-        
+        confirmed: false
       };
     }
   
@@ -125,7 +125,7 @@ class Results extends Component {
                 rows={this.state.userScores.map( userScore => {
                  return {
                    key: userScore.userspotifyid,
-                   values: [userScore.username, userScore.score]
+                   values: [userScore.username, this.state.confirmed ? userScore.score : '-']
                  }
                 }).sort( (a,b) => - a.values[1] + b.values[1])} // Sort in reverse order
                 head = {["Name", "Score"]}
@@ -143,7 +143,7 @@ class Results extends Component {
                 rows={this.state.songScores.map( songScore => {
                  return {
                    key: songScore.songid,
-                   values: [songScore.songname, songScore.score, songScore.username]
+                   values: [songScore.songname, this.state.confirmed ? songScore.score : '-', songScore.username]
                  }
                 }).sort( (a,b) => - a.values[1] + b.values[1])} // Sort in reverse order
                 head = {["Name", "Score", "User"]}
