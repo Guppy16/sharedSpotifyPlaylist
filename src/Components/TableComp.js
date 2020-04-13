@@ -18,6 +18,8 @@ export default function SimpleTable(props) {
   const classes = useStyles();
   const rows = props.rows;
   const headers = props.head;
+  console.log("Getting table");
+  console.log(headers);
 
   return (
     <TableContainer component={Paper}>
