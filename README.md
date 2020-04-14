@@ -20,6 +20,7 @@ The top 5 songs will be kept, and all other additions for a specific time interv
 - Removie sign in button 
 - Change time mins in playlist data
 - Keep record of data of playlists in the past to view past weeks
+- Delete songs that got less than 10
 
 ### Notes for Development
 - After modifications, git commit your changes & git push heroku master
