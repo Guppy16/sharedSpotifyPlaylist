@@ -21,6 +21,9 @@ The top 5 songs will be kept, and all other additions for a specific time interv
 - Change time mins in playlist data
 - Keep record of data of playlists in the past to view past weeks
 - Delete songs that got less than 10
+- SERVER
+  - Abstract functions from server
+  - Give user accessToken ONLY. Use that as own authentication for DB, instead of giving them userid
 
 ### Notes for Development
 - After modifications, git commit your changes & git push heroku master

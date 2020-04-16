@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-// import {TextInput} from 'react-native';
-import logo from './logo.svg';
+import { Link } from "react-router-dom";
+
 import 'reset-css/reset.css';
-import './App.css';
+import '../App.css';
 import queryString from 'query-string'
 import request from 'request'
-import SimpleTable from "./Components/TableComp"
+import SimpleTable from "../components/TableComp"
 
 
 const fakeServerData = {
@@ -55,7 +55,7 @@ function ResultsButton(props) {
     );
   }
 
-class Results extends Component {
+class ResultsPage extends Component {
 
     constructor (props) {
       super(props);
@@ -204,5 +204,5 @@ class Results extends Component {
     
   }
   
-  export default Results;
+  export default ResultsPage;
   

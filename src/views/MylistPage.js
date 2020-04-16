@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-// import {TextInput} from 'react-native';
-import 'reset-css/reset.css';
-//import './App.css';
+import { Link } from "react-router-dom";
+
+// import './App.css';
 import queryString from 'query-string'
 import request from 'request'
 import { DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
-//const superagent = require('superagent');
 
 let defaultTextColor = '#fff'
 let defaultStyle = {
@@ -194,7 +193,7 @@ class Playlist extends Component {
   }
 }
 
-class App extends Component {
+class MylistPage extends Component {
 
   constructor () {
     super();
@@ -377,4 +376,4 @@ class App extends Component {
   
 }
 
-export default App;
+export default MylistPage;

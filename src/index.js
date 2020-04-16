@@ -1,97 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+
+import 'reset-css/reset.css';
+
+import Footer from "./components/Footer.js";
 import App from './App';
-import logo from './logo.svg';
-import Results from './Results'
+import ResultsPage from './views/ResultsPage.js';
+import MylistPage from "./views/MylistPage.js";
+import Header from "./components/Header.js";
+import LandingPage from "./views/LandingPage.js";
 import * as serviceWorker from './serviceWorker';
 
-function AppFooter(props){ 
-  return (
-    <footer className="App-footer">
-      <img src={logo} className="App-logo" alt="logo"/>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Powered by React
-      </a>
-      <p>I'm storing cookies whether you like it or not</p>
-    </footer>
-  );
-}
-
-const defaultStyle = {
-  color: '#fff', padding: '10px', display: 'inline-block', 
-}
-
-function HomeButton(props) {
-  return (
-    <button onClick={props.onClick} 
-      onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
-      onMouseLeave={ (e) => e.target.style.border='3px solid #fff' }
-      style={{...defaultStyle, fontSize: '20px', borderRadius: '3px', border: '3px solid #fff',
-       ...(props.style ? {color:'green'} : {color:'black'}),
-      }}
-    >
-      {props.value}
-    </button>
-  );
-}
-
-// Simple home page to decide what to render
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      display: 'App', // App/Results
-    };
-  }
-
-  handleClick(destination){
-    this.setState({display: destination});
-    console.log(this.state);
-  }
-
-  render() {
-    return (
-      <div>
-      <div>
-        <header style={{...defaultStyle, verticalAlign: 'middle', display: 'flex', justifyContent: 'space-between'}}>
-          <h1 style={{display: 'inline-block', padding: '20px', fontSize: '30px'}}>
-            Shared Spotify Playlist
-          </h1>
-          <div>
-          <HomeButton 
-            onClick={ () => {this.handleClick('Results')}} 
-            value='Results'
-            style={ this.state.display === 'Results'}
-          />
-          <HomeButton 
-            onClick={ () => {this.handleClick('App')}} 
-            value='My List'
-            style={this.state.display === 'App'}
-          />
-          </div>
-
-        </header>
-      </div>
-      <div>
-        {this.state.display === 'App' ? <App /> : <Results />}
-      </div>
-      </div>
-    );
-  }
-
-}
+var hist = createBrowserHistory();
+// console.log = console.warn = console.error = () => {};
 
 ReactDOM.render(
   
   <React.StrictMode>
-    <Home />
-    <AppFooter />
+    <Router history={hist}>
+      <Header />
+      <Switch>
+        <Route path="/Mylist" component={MylistPage} />
+        <Route path="/Results" component={ResultsPage} />
+        <Route path="/" component={LandingPage} />
+        <Route component={ResultsPage} />
+      </Switch>
+      <Footer />
+    </Router>    
   </React.StrictMode>,
   document.getElementById('root')
 );
