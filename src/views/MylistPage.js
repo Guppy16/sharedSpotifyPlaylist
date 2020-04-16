@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 // import './App.css';
 import queryString from 'query-string'
 import request from 'request'
-import { DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 
-let defaultTextColor = '#fff'
-let defaultStyle = {
-  color: defaultTextColor,
+import Playlist from "./MylistPage/PlaylistSection.js"
+
+const defaultStyle = {
+  color: '#fff',
 }
 
 let fakeServerData = {
@@ -35,163 +35,14 @@ let fakeServerData = {
   }
 };
 
-class Filter extends Component {
-  render() {
-    return (
-      <div style= {{padding: '5px', height: '40px', verticalAlign: "bottom"}}>
-        <input type="text" onKeyUp={event => this.props.onTextChange(event.target.value)}
-        placeholder="Filter"
-        style= {{padding: '0px',}}
-        />
-      </div>  
-    );
-  }
-}
-
-function PlaylistHeader (props) {
-  let totalDuration = props.playlist.songs.reduce((sum, song) => {
-    return sum + song.duration;
-  }, 0);
-  totalDuration = Math.round(totalDuration/1000/60);
-  const numOfSongs = props.playlist.songs.length
-  return (
-    <div style={{...defaultStyle, width: "auto", marginLeft: '0vw'}}>
-      <img src={props.playlist.imgUrl} className='PlaylistImg'/>
-      <div style={{display: 'inline-block', verticalAlign: 'top', height: "140px"}}>
-        <p style={{
-          textAlign: 'center', fontSize: '30px', padding: '10px', fontWeight:'bold', 
-        }}>
-          {props.playlist.name}
-        </p>
-        <p style={{textAlign: 'left'}}>
-        {numOfSongs} songs <br/>
-        {totalDuration} mins
-        </p>
-      </div>
-    </div>
-    );
-}
-
-class Song extends Component {
-  render () {
-    return (
-      <button className="song" onClick={this.props.onClick} style={{
-        fontSize: '15px',
-        padding: '3px',
-      }, 
-      this.props.renderVal ? {color: 'green'} : {backgroundColor: 'rgba(255,255,255,0.9)',}  
-      }>
-        {this.props.value}
-      </button>
-    );
-  }
-}
-
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+	const result = Array.from(list);
+	const [removed] = result.splice(startIndex, 1);
+	result.splice(endIndex, 0, removed);
 
-  return result;
+	return result;
 };
-
-const grid = 8; // Used for padding
-
-const getItemStyle = (isDragging, draggableStyle, inFilter) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-  margin: `0 0 ${grid}px 0`,
-
-  // change padding based on filter
-  padding: inFilter ? grid * 2 : grid,
-
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : inFilter? "green" : "darkseagreen",
-
-  // styles we need to apply on draggables
-  ...draggableStyle
-});
-
-const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? "#202020" : "black",
-  padding: grid,
-  width: '75vw'
-});
-
-class SongList extends Component {
-  render () {
-    return (
-      <DragDropContext onDragEnd={this.props.onDragEnd}>
-          <Droppable droppableId="droppable">
-            {(provided, snapshot) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
-              >
-                {this.props.songs.map((song, index) => (
-                  <Draggable key={song.id} draggableId={song.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style,
-                          song.render,
-                        )}
-                      >
-                        {index + 1}. {song.name}
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-    );
-  }
-}
-
-class Playlist extends Component {
-
-  render () {
-
-    const items = this.props.playlist.songs.map( song => ({
-      id: song.id,
-      content: song.name,
-    }));
-
-    return (
-      <div style={{...defaultStyle, marginLeft: '10vw', marginRight: '10vw'}}>
-      <div style={{display:'flex', alignItems:'center', justifyContent: 'space-between'}}>
-        <div style={{display: 'inline-block'}}>
-          <PlaylistHeader playlist={this.props.playlist} />
-          <Filter onTextChange={text => this.props.onTextChange(text)}/>
-        </div>
-        <div style={{display: 'inline-block', textAlign: 'center'}}>
-        <button onClick={() => this.props.handleClick()} 
-          onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
-          onMouseLeave={ (e) => e.target.style.border='3px solid #fff' } 
-          style={{ width:'20vw', padding:'3px', borderRadius: '3px', border: '3px solid #fff', 
-          fontSize: '22px', fontWeight: 'bold'
-        }}>
-          { this.props.buttonVal ? "Saved" : "Save"}
-        </button>
-        <p style={{
-          padding: '9px', fontStyle: 'italic',
-        }}>You can change your response later</p>
-        </div>
-      </div>
-      <SongList onDragEnd={this.props.onDragEnd} songs={this.props.playlist.songs} />
-      </div>
-    );
-  }
-}
 
 class MylistPage extends Component {
 
@@ -261,9 +112,6 @@ class MylistPage extends Component {
       });
       console.log(this.state);
     });
-
-    // setTimeout ( () => {this.setState({serverData:fakeServerData});}, 1000);
-    // setTimeout ( () => {this.setState({filterString:'fav2'});}, 1200); // To test filtering
   }
 
   handleFilter(inpText) {

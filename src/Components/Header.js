@@ -9,17 +9,17 @@ const defaultStyle = {
 function HeaderButton(props) {
 	
   return (
-		<Link to={props.link + window.location.search}>
-    <button
-      onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
-      onMouseLeave={ (e) => e.target.style.border='3px solid #fff' }
-      style={{...defaultStyle, fontSize: '20px', borderRadius: '3px', border: '3px solid #fff',
-       ...(props.style ? {color:'green'} : {color:'black'}),
-      }}
-    >
-      {props.value}
-    </button>
-		</Link>
+	<Link to={props.link + window.location.search}>
+		<button
+		onMouseOver={ (e) => e.target.style.border='3px solid #4CAF50' }
+		onMouseLeave={ (e) => e.target.style.border='3px solid #fff' }
+		style={{...defaultStyle, fontSize: '20px', borderRadius: '3px', border: '3px solid #fff',
+		...(props.style ? {color:'green'} : {color:'black'}),
+		}}
+		>
+		{props.value}
+		</button>
+	</Link>
   );
 }
 
