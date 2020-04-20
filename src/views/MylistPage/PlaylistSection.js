@@ -34,7 +34,7 @@ class Playlist extends Component {
 			<div style={{display:'flex', alignItems:'center', justifyContent: 'space-between'}}>
 				<div style={{display: 'inline-block'}}>
 					<PlaylistHeader playlist={this.props.playlist} />
-					<Filter onTextChange={text => this.props.onTextChange(text)}/>
+					{/* <Filter onTextChange={text => this.props.onTextChange(text)}/> */}
 				</div>
 				<div style={{display: 'inline-block', textAlign: 'center'}}>
 				<button onClick={() => this.props.handleClick()} 

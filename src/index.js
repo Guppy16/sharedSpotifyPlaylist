@@ -20,14 +20,14 @@ ReactDOM.render(
   
   <React.StrictMode>
     <Router history={hist}>
-      <Header />
+      {/* <Header /> */}
       <Switch>
         <Route path="/Mylist" component={MylistPage} />
         <Route path="/Results" component={ResultsPage} />
         <Route path="/" component={LandingPage} />
-        <Route component={ResultsPage} />
+        <Route component={LandingPage} />
       </Switch>
-      <Footer />
+      <Footer/>
     </Router>    
   </React.StrictMode>,
   document.getElementById('root')

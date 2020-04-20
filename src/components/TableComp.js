@@ -23,7 +23,7 @@ export default function SimpleTable(props) {
 
   return (
     <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
+      <Table className={classes.table} aria-label="simple results table">
         <TableHead>
           <TableRow>
             <TableCell>{headers[0]}</TableCell>

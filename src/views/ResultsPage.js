@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 
 import 'reset-css/reset.css';
 import '../App.css';
-import queryString from 'query-string'
-import request from 'request'
-import SimpleTable from "../components/TableComp"
+import queryString from 'query-string';
+import request from 'request';
+import SimpleTable from "../components/TableComp";
+import AppBar from "../components/AppBar.js";
 
 
 const fakeServerData = {
@@ -131,8 +132,8 @@ class ResultsPage extends Component {
   
       return (
         <div className="App">
-
-            <h1 style={{...defaultStyle, fontSize: '54px', padding: '20px', textAlign:'center'}}>
+            <AppBar />
+            <h1 style={{...defaultStyle, fontSize: '54px', padding: '20px', textAlign:'center', marginTop: '80px'}}>
                 Overall Winner
             </h1>
             {this.state.userScores &&
@@ -181,22 +182,6 @@ class ResultsPage extends Component {
                 onClick = {() => this.handleClick_confirm()}
                 value='ConFIrm mY ResUltS'
             />
-             
-            {this.state.user?
-            <div>
-                <h2 style={{...defaultStyle, fontSize: '24px', paddingBottom: '20px', marginLeft: '10vw'}}> 
-                Under development
-                </h2>
-            </div> 
-                : <div style={{textAlign:'center'}}>
-                    <ResultsButton onClick={() => {
-                        return window.location = window.location.href.includes('localhost')
-                        ? 'http://localhost:8888/login' 
-                        : 'https://shared-playlist-backend.herokuapp.com/login' }
-                        }
-                        value='Sign in with Spotify'
-                    /></div>
-            }
             </div>
         </div>
       );

@@ -5,11 +5,12 @@ This project is designed to scrape song names from a playlist, so that my friend
 The top 5 songs will be kept, and all other additions for a specific time interval will be removed.
 
 ## TODO
+- Update Songs
 - Confirm button
 - backend processing of data:
   - People want to view all songs
 - Web page to view these results [May need to create a separate website and page for this]
-- Play music by clicking on the play button on the list
+
 - Maybe highlight top 1
 - Play top song when everyon's done their result
 - Create refresh token?
@@ -17,13 +18,16 @@ The top 5 songs will be kept, and all other additions for a specific time interv
 - Change background colour
 - Make powerd by react smaller (and add heroku)
 - Redirect to pages
-- Removie sign in button 
+- Remove sign in button in results page
 - Change time mins in playlist data
 - Keep record of data of playlists in the past to view past weeks
-- Delete songs that got less than 10
+- Delete songs not in top 10
 - SERVER
   - Abstract functions from server
   - Give user accessToken ONLY. Use that as own authentication for DB, instead of giving them userid
+
+## ARCHIVE
+- Play music by clicking on the play button on the list
 
 ### Notes for Development
 - After modifications, git commit your changes & git push heroku master

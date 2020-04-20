@@ -2,12 +2,23 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
+import 'reset-css/reset.css';
 import '../assets/index.css';
 import logo from '../assets/logo.svg';
 
 export default function Footer(props){ 
     return (
-        <footer className="App-footer">
+        <footer style={{
+            minHeight: "10vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "cener",
+            fontSize: "calc(10px + 2vmin)",
+            color: "white",
+            padding: "20px",
+            bottom: "0",
+        }}>
         <img src={logo} className="App-logo" alt="logo"/>
         <a
             className="App-link"
@@ -17,7 +28,7 @@ export default function Footer(props){
         >
             Powered by React
         </a>
-        <p>I'm storing cookies whether you like it or not</p>
+        <p>Turns out I'm not actually storing cookies</p>
         </footer>
     );
 }
