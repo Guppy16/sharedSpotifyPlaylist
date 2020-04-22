@@ -88,6 +88,18 @@ class MylistPage extends Component {
         });
     }
 
+    // Call api to update list of songs
+    console.log("Updating songs");
+    request.get({
+      url: (window.location.href.includes('localhost')
+        ? 'http://localhost:8888'
+        : 'https://shared-playlist-backend.herokuapp.com')
+        + '/db/songs?access_token=' + accessToken + '&user_id=' + (userid ? userid : ''),
+      json: true
+    }, (error, response, body) => {
+      console.log(body);
+    });
+
     // Get collabroative playlist data
     request.get({
       url: (window.location.href.includes('localhost')
@@ -208,19 +220,7 @@ class MylistPage extends Component {
             />
           </div>
           : <div style={{ textAlign: 'center', padding: '20px' }}>
-            {/* <button onClick={() => {
-              return window.location = window.location.href.includes('localhost')
-                ? 'http://localhost:8888/login'
-                : 'https://shared-playlist-backend.herokuapp.com/login'
-            }
-            }
-              onMouseOver={(e) => e.target.style.border = '3px solid #4CAF50'}
-              onMouseLeave={(e) => e.target.style.border = '3px solid #fff'}
-              style={{
-                padding: '20px', fontSize: '50px', borderRadius: '5px', border: '3px solid #fff',
-              }}>
-              Sign in with Spotify
-            </button> */}
+
           </div>
         }
 
